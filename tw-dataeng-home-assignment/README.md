@@ -13,22 +13,28 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;This is the step of ETL that I used:
 
-1. Extract
+1. Extract (extract.py)
 
-&nbsp;&nbsp;&nbsp;&nbsp;Extract stage is used to extract data from data sources. Because in this database we only have one format of data, therefore I only use pandas library to extract data from csv into data frame and return that data frame.
+&nbsp;&nbsp;&nbsp;&nbsp;Extract stage is used to extract data from data sources. Because in this database we only have one format of data, therefore I only use pandas library to extract data from csv into data frame and return that data frame. Note that the file path is at my local machine. 
 
-2. Transform
+2. Transform (transform.py)
 
 &nbsp;&nbsp;&nbsp;&nbsp;In this transform stage, I used python to transform data to what I need, what I did is:
 
-    - I remove the unnecessary columns. In this case I only used the column [Continent, Country, and the last column of the file].
-    - Remove missing values from the dataset using .dropna() function from pandas
-    - Because the data type of the last column is float and has many number after comma, then I transform to round up the value therefore the value only has 2 number after comma
-    - After transform the values of the last column I create new data frame for transformed column and replace the old column with the new transformed column
+    - Convert 'active_date' column to datetime
+    - Calculate the longest streak for each user
+    - Find the top workspace for each user
+    - Calculate the longest streak for each user. Then merge the top workspace and longest streak data. 
+    
 
-3. Load
+3. Load (main.py)
 
-&nbsp;&nbsp;&nbsp;&nbsp;Load stage is used to load the data that has been transformed to the data warehouse or database. In this case I used PostgreSQL with docker image that I will explain more later in docker section. I used psycopg2 to help me connect python with PostgreSQL. Not just that, I also used argparse to help me create command arguments in python therefore, I can input csv file, database name, host name, username, password, and port of PostgreSQL flexibly.
+&nbsp;&nbsp;&nbsp;&nbsp;Load stage is used to load the data that has been transformed to the data warehouse or database. In this case I used PostgreSQL with docker image that I will explain more later in docker section. I used psycopg2 to help me connect python with PostgreSQL. Not just that, I also used argparse to help me create command arguments in python therefore, I can input csv file, database name, host name, username, password, and port of PostgreSQL flexibly. At the end, we have the table in the step transform to populate into the PostgresSQL warehouse. 
+
+4. Test dataset (test.py)
+&nbsp;&nbsp;&nbsp;&nbsp; At the stage, we want to add an integration test to the project that runs the ETL pipeline using the given sample input
+  file `data/activity.csv` and writes it to PostgreSQL. Assert values of `longest_streak` and `top_workspace` for `user_id=5bfd0e8d472bcf0009a1014d`. So I prepare a copy of the main.py to test.py which populate the user_activity_test table into PostgresSQL warehouse.
+In the other hand, I also tried another way, that write the result of the target SQL query to PostgreSQL using the psql command within a Docker container from command line. Follow the step 13 below, inside the pgcli prompt, you can run your SQL query and write the query result to a file named "output.txt"
 
 # How To Use
 
