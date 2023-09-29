@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+
+ pgdatabase:
+  image: postgres:15
+  environment:
+   - POSTGRES_USER=postgres
+   - POSTGRES_PASSWORD=123456
+   - POSTGRES_DB=activity
+  ports:
+   - "5432:5432"
+  volumes:
+   - etl_activity:/var/lib/postgresql/data
+  networks:
+   - activity_network
+
+ pgadmin:
+  image: dpage/pgadmin4
+  environment:
+   - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+   - PGADMIN_DEFAULT_PASSWORD=root
+  ports:
+   - "8080:80"
+  volumes:
+   - etl_activity:/var/lib/postgresql/data
+  depends_on:
+   - pgdatabase
+  networks:
+   - activity_network
+
+networks:
+ activity_network:
+  #external: true #for let anything outside compose can connect with this networks
+
+
+volumes:
+  etl_activity:
+  pgadmin:
