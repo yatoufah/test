@@ -29,17 +29,17 @@
 
 3. Load (main.py)
 
-&nbsp;&nbsp;&nbsp;&nbsp;Load stage is used to load the data that has been transformed to the data warehouse or database. In this case I used PostgreSQL with docker image that I will explain more later in docker section. I used psycopg2 to help me connect python with PostgreSQL. Not just that, I also used argparse to help me create command arguments in python therefore, I can input csv file, database name, host name, username, password, and port of PostgreSQL flexibly. At the end, we have the table in the step transform to populate into the PostgresSQL warehouse. 
+&nbsp;&nbsp;&nbsp;&nbsp;Load stage is used to load the data that has been transformed to the data warehouse or database. In this case I used PostgreSQL with docker image that I will explain more later in docker section. I used `psycopg2` to help me connect python with PostgreSQL. Not just that, I also used argparse to help me create command arguments in python therefore, I can input csv file, database name, host name, username, password, and port of PostgreSQL flexibly. At the end, we have the table in the step transform to populate into the PostgresSQL warehouse. 
 
 4. Test dataset (test.py)
 &nbsp;&nbsp;&nbsp;&nbsp; At the stage, we want to add an integration test to the project that runs the ETL pipeline using the given sample input
-  file `data/activity.csv` and writes it to PostgreSQL. Assert values of `longest_streak` and `top_workspace` for `user_id=5bfd0e8d472bcf0009a1014d`. So I prepare a copy of the main.py to test.py which populate the user_activity_test table into PostgresSQL warehouse.
-In the other hand, I also tried another way, that write the result of the target SQL query to PostgreSQL using the psql command within a Docker container from command line. Follow the step 13 below, inside the pgcli prompt, you can run your SQL query and write the query result to a file named "output.txt"
+  file `data/activity.csv` and writes it to PostgreSQL. Assert values of `longest_streak` and `top_workspace` for `user_id=5bfd0e8d472bcf0009a1014d`. So I prepare a copy of the `main.py` to `test.py` which populate the `user_activity_test table` into PostgresSQL warehouse.
+In the other hand, I also tried another way, that write the result of the target SQL query to PostgreSQL using the psql command within a Docker container from command line. Follow the step 13 below, inside the `pgcli` prompt, you can run your SQL query and write the query result to a file named "output.txt"
 
 # How To Use
 
 1. Clone this repository
-2. Create volume name **etl_activity** with this command ```docker volume create etl_activity``
+2. Create volume name **etl_activity** with this command ```docker volume create etl_activity```
 3. PostgreSQL using this path to save their data in docker */var/lib/postgresql/data*. Therefore if you want to use volume then the path of your volume will be like this ```[your volume name]:/var/lib/postgresql/data```. So the volume will be like this ```etl_activity:/var/lib/postgresql``` 
 4. Pull postgres image from docker using this command line ```docker pull postgres```
 5. create network for docker by using this command line ```docker network create activity_network```
